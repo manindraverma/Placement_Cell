@@ -1,8 +1,8 @@
 const mongoose=require('mongoose');
 
 //establish connection to mongo database running in the background on my system
-mongoose.connect('mongodb://localhost/Placementcell_development');
-
+//mongoose.connect('mongodb://localhost/Placementcell_development');
+mongoose.connect('mongodb+srv://manindra301998:Manindra%40304@cluster0.utmwdfy.mongodb.net/?retryWrites=true&w=majority')
 
 //below 3 lines are to make sure connection was established successfully or not
 const db=mongoose.connection;
