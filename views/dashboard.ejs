@@ -182,6 +182,23 @@
                     </tr>
                   </tbody>
                 </table>
+                <div class="d-flex justify-content-around" style="width: 100%">
+                  <a
+                    href="/interview/edit-interview/<%= interview.id %>"
+                    class="btn btn-primary"
+                    style="width: 40%"
+                  >
+                    Edit
+                  </a>
+                  <a
+                    href="/interview/destroy/<%= interview.id %>"
+                    class="btn btn-danger"
+                    style="width: 40%"
+                  >
+                    Delete
+                  </a>
+                </div>
+                <br />
 
                 <div
                   class="d-flex flex-column align-items-center"
@@ -267,6 +284,7 @@
               </div>
             </div>
           </div>
+
           <%} %>
         </div>
       </div>

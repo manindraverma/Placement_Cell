@@ -50,9 +50,9 @@ app.use(session({
     },
 
     store: MongoStore.create({
-        //options)
-    // store : new MongoStore({
-       mongoUrl : "mongodb+srv://manindra301998:Manindra%40304@cluster0.utmwdfy.mongodb.net/?retryWrites=true&w=majority",
+
+      //  mongoUrl : "mongodb://localhost/Placementcell_development",
+        mongoUrl : "mongodb+srv://manindra301998:Manindra%40304@cluster0.utmwdfy.mongodb.net/?retryWrites=true&w=majority",
         autoremove : "disabled",
     },function(err){
         console.log("error at mongo store",err || "connection established to store cookie");

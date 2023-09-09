@@ -120,3 +120,100 @@ module.exports.deallocate = async (req, res) => {
     console.log("error", "Couldn't deallocate from interview");
   }
 };
+
+// render edit interview page
+module.exports.editInterview = async (req, res) => {
+  const interview = await Interview.findById(req.params.id);
+
+  if (req.isAuthenticated()) {
+    return res.render("editInterview", {
+      title: "Edit Interview",
+      interview_details: interview,
+    });
+  }
+
+  return res.redirect("/");
+};
+
+// update interview  details
+module.exports.update = async (req, res) => {
+  try {
+    const interview = await Interview.findById(req.params.id);
+    const { company, date } = req.body;
+
+    if (!interview) {
+      return res.redirect("back");
+    }
+
+    interview.company = company;
+    interview.date = date;
+
+    interview.save();
+
+    const StudentsInInterview = interview.students;
+
+    // delete reference of interview from students in which these student is enrolled
+    if (StudentsInInterview.length > 0) {
+      for (let student of StudentsInInterview) {
+        //console.log(student.student);
+        const studentIndividual = await Student.findById({
+          _id: student.student});
+        for( let i of studentIndividual.interviews){
+           // console.log(i.date)
+            i.company = company;
+            i.date = date;
+        }
+        studentIndividual.save();
+       // console.log("each student", studentIndividual);
+      }
+    }
+
+    return res.redirect("/dashboard");
+  } catch (err) {
+    console.log(err);
+    return res.redirect("back");
+  }
+};
+
+// Deletion of interview
+module.exports.destroy = async (req, res) => {
+  try {
+    const { interviewId } = req.params;
+    const interview = await Interview.findById(interviewId);
+   // console.log("this is interviewId", interviewId);
+
+    if (!interview) {
+      return;
+    }
+
+    const StudentsInInterview = interview.students;
+
+    // delete reference of interview from students in which these student is enrolled
+    if (StudentsInInterview.length > 0) {
+      for (let student of StudentsInInterview) {
+        console.log('Student id',student.student)
+        const st1=await Student.findOneAndUpdate(
+          { _id: student.student })
+        //   ,
+        //   { $pull: { interviews: { company: interview.company } } }
+        // );
+        for(let i  of st1.interviews){
+            console.log('company name',i.company)
+            console.log('interview company name',interview.company)
+            if(i.company==interview.company){
+                console.log('company name',i)
+                i.remove();
+            }
+        }
+        st1.save();
+        console.log(st1);
+      }
+    }
+
+    interview.remove();
+    return res.redirect("back");
+  } catch (err) {
+    console.log("error", err);
+    return;
+  }
+};
